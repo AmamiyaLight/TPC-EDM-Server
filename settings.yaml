@@ -1,0 +1,13 @@
+system:
+  ip: 127.0.0.1
+  port: 8080
+  env: dev
+  gin_mode: debug
+db:
+  - user: root
+    password: root
+    host: 127.0.0.1
+    port: 3306
+    db: tpc_h
+    debug: false
+    source: mysql
