@@ -14,5 +14,9 @@ func Run() {
 	nr := r.Group("/api")
 	addr := global.Config.System.Addr()
 	UserRouter(nr)
+	OrdersRouter(nr)
+	PartSuppRouter(nr)
+	LineItemRouter(nr)
+
 	r.Run(addr)
 }
