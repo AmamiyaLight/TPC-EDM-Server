@@ -1,7 +1,7 @@
 package router
 
 import (
-	"TPC-H-EDM-Server/global"
+	"TPC-EDM-Server/global"
 	"github.com/gin-gonic/gin"
 )
 

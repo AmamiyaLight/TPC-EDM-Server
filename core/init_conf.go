@@ -1,8 +1,8 @@
 package core
 
 import (
-	"TPC-H-EDM-Server/conf"
-	"TPC-H-EDM-Server/flags"
+	"TPC-EDM-Server/conf"
+	"TPC-EDM-Server/flags"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"

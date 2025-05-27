@@ -1,10 +1,10 @@
 package main
 
 import (
-	"TPC-H-EDM-Server/core"
-	"TPC-H-EDM-Server/flags"
-	"TPC-H-EDM-Server/global"
-	"TPC-H-EDM-Server/router"
+	"TPC-EDM-Server/core"
+	"TPC-EDM-Server/flags"
+	"TPC-EDM-Server/global"
+	"TPC-EDM-Server/router"
 )
 
 func main() {

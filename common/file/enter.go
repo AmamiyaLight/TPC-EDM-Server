@@ -1,7 +1,7 @@
 package file
 
 import (
-	"TPC-H-EDM-Server/global"
+	"TPC-EDM-Server/global"
 	"bufio"
 	"errors"
 	"github.com/gin-gonic/gin"

@@ -1,7 +1,7 @@
 package core
 
 import (
-	"TPC-H-EDM-Server/global"
+	"TPC-EDM-Server/global"
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

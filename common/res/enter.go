@@ -1,7 +1,7 @@
 package res
 
 import (
-	"TPC-H-EDM-Server/utils/validate"
+	"TPC-EDM-Server/utils/validate"
 	"github.com/gin-gonic/gin"
 )
 

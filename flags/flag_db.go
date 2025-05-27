@@ -1,8 +1,8 @@
 package flags
 
 import (
-	"TPC-H-EDM-Server/global"
-	"TPC-H-EDM-Server/models"
+	"TPC-EDM-Server/global"
+	"TPC-EDM-Server/models"
 	"github.com/sirupsen/logrus"
 )
 

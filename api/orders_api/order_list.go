@@ -1,9 +1,9 @@
 package orders_api
 
 import (
-	"TPC-H-EDM-Server/common"
-	"TPC-H-EDM-Server/common/res"
-	"TPC-H-EDM-Server/models"
+	"TPC-EDM-Server/common"
+	"TPC-EDM-Server/common/res"
+	"TPC-EDM-Server/models"
 	"github.com/gin-gonic/gin"
 )
 

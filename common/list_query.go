@@ -1,7 +1,7 @@
 package common
 
 import (
-	"TPC-H-EDM-Server/global"
+	"TPC-EDM-Server/global"
 	"fmt"
 )
 

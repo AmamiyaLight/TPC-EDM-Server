@@ -1,10 +1,10 @@
 package part_supp_api
 
 import (
-	"TPC-H-EDM-Server/common/file"
-	"TPC-H-EDM-Server/common/res"
-	"TPC-H-EDM-Server/models"
-	"TPC-H-EDM-Server/utils/parse_utils"
+	"TPC-EDM-Server/common/file"
+	"TPC-EDM-Server/common/res"
+	"TPC-EDM-Server/models"
+	"TPC-EDM-Server/utils/parse_utils"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"

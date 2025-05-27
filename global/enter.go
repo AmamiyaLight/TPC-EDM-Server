@@ -1,7 +1,7 @@
 package global
 
 import (
-	"TPC-H-EDM-Server/conf"
+	"TPC-EDM-Server/conf"
 	"gorm.io/gorm"
 )
 
