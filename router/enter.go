@@ -17,6 +17,10 @@ func Run() {
 	OrdersRouter(nr)
 	PartSuppRouter(nr)
 	LineItemRouter(nr)
-
+	NationRouter(nr)
+	CustomerRouter(nr)
+	PartRouter(nr)
+	RegionRouter(nr)
+	SupplierRouter(nr)
 	r.Run(addr)
 }
