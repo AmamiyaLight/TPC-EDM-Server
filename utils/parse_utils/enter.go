@@ -35,3 +35,17 @@ func ParseTimeUtil(s string) time.Time {
 	}
 	return val
 }
+
+func StrConvUInt(i uint) string {
+	return strconv.FormatUint(uint64(i), 10)
+}
+func StrConvInt(i int) string {
+	return strconv.Itoa(i)
+}
+
+func StrConvFloat(f float64) string {
+	return strconv.FormatFloat(f, 'f', 2, 64)
+}
+func StrConvTime(t time.Time) string {
+	return t.Format("2006-01-02")
+}

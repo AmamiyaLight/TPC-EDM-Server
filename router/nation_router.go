@@ -7,6 +7,7 @@ import (
 
 func NationRouter(r *gin.RouterGroup) {
 	app := api.App.NationApi
-	r.POST("Nation", app.NationInsertView)
-	r.GET("Nation", app.NationListView)
+	r.POST("nation", app.NationInsertView)
+	r.GET("nation", app.NationListView)
+	r.GET("nation/download", app.NationDownloadView)
 }

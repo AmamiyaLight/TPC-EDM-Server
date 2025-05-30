@@ -7,6 +7,7 @@ import (
 
 func SupplierRouter(r *gin.RouterGroup) {
 	app := api.App.SupplierApi
-	r.POST("Supplier", app.SupplierInsertView)
-	r.GET("Supplier", app.SupplierListView)
+	r.POST("supplier", app.SupplierInsertView)
+	r.GET("supplier", app.SupplierListView)
+	r.GET("supplier/download", app.SupplierDownloadView)
 }

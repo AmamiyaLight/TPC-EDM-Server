@@ -7,6 +7,7 @@ import (
 
 func CustomerRouter(r *gin.RouterGroup) {
 	app := api.App.CustomerApi
-	r.POST("Customer", app.CustomerInsertView)
-	r.GET("Customer", app.CustomerListView)
+	r.POST("customer", app.CustomerInsertView)
+	r.GET("customer", app.CustomerListView)
+	r.GET("customer/download", app.CustomerDownloadView)
 }

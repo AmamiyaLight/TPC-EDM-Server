@@ -9,4 +9,5 @@ func LineItemRouter(r *gin.RouterGroup) {
 	app := api.App.LineItemApi
 	r.POST("lineitem", app.LineItemInsertView)
 	r.GET("lineitem", app.LineItemListView)
+	r.GET("lineitem/download", app.LineItemDownloadView)
 }

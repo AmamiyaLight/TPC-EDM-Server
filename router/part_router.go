@@ -7,6 +7,7 @@ import (
 
 func PartRouter(r *gin.RouterGroup) {
 	app := api.App.PartApi
-	r.POST("Part", app.PartInsertView)
-	r.GET("Part", app.PartListView)
+	r.POST("part", app.PartInsertView)
+	r.GET("part", app.PartListView)
+	r.GET("part/download", app.PartDownloadView)
 }

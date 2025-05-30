@@ -7,6 +7,7 @@ import (
 
 func RegionRouter(r *gin.RouterGroup) {
 	app := api.App.RegionApi
-	r.POST("Region", app.RegionInsertView)
-	r.GET("Region", app.RegionListView)
+	r.POST("region", app.RegionInsertView)
+	r.GET("region", app.RegionListView)
+	r.GET("region/download", app.RegionDownloadView)
 }
