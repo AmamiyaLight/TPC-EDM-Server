@@ -10,4 +10,5 @@ func SupplierRouter(r *gin.RouterGroup) {
 	r.POST("supplier", app.SupplierInsertView)
 	r.GET("supplier", app.SupplierListView)
 	r.GET("supplier/download", app.SupplierDownloadView)
+	r.GET("supplier/top", app.TopSupplierView)
 }

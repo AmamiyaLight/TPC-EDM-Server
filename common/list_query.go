@@ -31,12 +31,14 @@ func (p PageInfo) GetOffset() int {
 }
 
 type Options struct {
-	PageInfo     PageInfo
-	Likes        []string
-	PreLoads     []string
-	Where        any
-	Debug        bool
-	DefaultOrder string
+	PageInfo      PageInfo
+	Likes         []string
+	PreLoads      []string
+	Joins         []string
+	Where         any
+	Debug         bool
+	DefaultOrder  string
+	AccuracyCount bool
 }
 
 func ListQuery[T any](model T, option Options) (list []T, count int, err error) {
@@ -47,7 +49,21 @@ func ListQuery[T any](model T, option Options) (list []T, count int, err error) 
 	if option.Debug {
 		query = query.Debug()
 	}
-	//模糊匹配
+
+	if len(option.PreLoads) > 0 {
+		for _, preload := range option.PreLoads {
+			query = query.Preload(preload)
+		}
+	}
+	joinMap := make(map[string]bool)
+	if len(option.Joins) > 0 {
+		for _, join := range option.Joins {
+			if !joinMap[join] {
+				query = query.Joins(join)
+				joinMap[join] = true
+			}
+		}
+	}
 	if len(option.Likes) > 0 && option.PageInfo.Key != "" {
 		likes := global.DB.Where("")
 		for _, column := range option.Likes {
@@ -55,15 +71,8 @@ func ListQuery[T any](model T, option Options) (list []T, count int, err error) 
 		}
 		query = query.Where(likes)
 	}
-	//定制化查询
 	if option.Where != nil {
 		query = query.Where(option.Where)
-	}
-
-	if len(option.PreLoads) > 0 {
-		for _, preload := range option.PreLoads {
-			query = query.Preload(preload)
-		}
 	}
 
 	//排序
@@ -74,25 +83,27 @@ func ListQuery[T any](model T, option Options) (list []T, count int, err error) 
 			query = query.Order(option.DefaultOrder)
 		}
 	}
-	//查总数
-	//var _c int64
-	//if err = query.Count(&_c).Error; err != nil {
-	//	return nil, 0, err
-	//}
-	//count = int(_c)
-	var approxCount int64
-	row := struct{ Rows int64 }{}
-	stmt := global.DB.Model(model).Statement
-	if stmt.Table == "" {
-		if err := stmt.Parse(model); err != nil {
+	if option.AccuracyCount {
+		var _c int64
+		if err = query.Count(&_c).Error; err != nil {
 			return nil, 0, err
 		}
+		count = int(_c)
+	} else {
+		var approxCount int64
+		row := struct{ Rows int64 }{}
+		stmt := global.DB.Model(model).Statement
+		if stmt.Table == "" {
+			if err := stmt.Parse(model); err != nil {
+				return nil, 0, err
+			}
+		}
+		tableName := stmt.Table
+		quotedTableName := stmt.Quote(tableName) // 正确引用表名
+		err = global.DB.Raw(fmt.Sprintf("EXPLAIN SELECT * FROM %s", quotedTableName)).Scan(&row).Error
+		approxCount = row.Rows
+		count = int(approxCount)
 	}
-	tableName := stmt.Table
-	quotedTableName := stmt.Quote(tableName) // 正确引用表名
-	err = global.DB.Raw(fmt.Sprintf("EXPLAIN SELECT * FROM %s", quotedTableName)).Scan(&row).Error
-	approxCount = row.Rows
-	count = int(approxCount)
 	//分页
 	limit := option.PageInfo.GetLimit()
 	offset := option.PageInfo.GetOffset()

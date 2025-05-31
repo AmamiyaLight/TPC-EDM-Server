@@ -10,4 +10,5 @@ func PartRouter(r *gin.RouterGroup) {
 	r.POST("part", app.PartInsertView)
 	r.GET("part", app.PartListView)
 	r.GET("part/download", app.PartDownloadView)
+	r.GET("part/promo", app.PartPromoView)
 }

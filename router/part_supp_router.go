@@ -10,4 +10,5 @@ func PartSuppRouter(r *gin.RouterGroup) {
 	r.POST("part_supp", app.PartSuppInsertView)
 	r.GET("part_supp", app.PartSuppListView)
 	r.GET("part_supp/download", app.PartSuppDownloadView)
+	r.GET("part_supp/relation", app.PartSuppRelationView)
 }

@@ -13,7 +13,7 @@ type LineItemModel struct {
 	Tax           float64   `json:"tax" gorm:"column:L_TAX;type:decimal(15,2)"`
 	ReturnFlag    string    `json:"return_flag" gorm:"column:L_RETURNFLAG;type:char(1)"`
 	LineStatus    string    `json:"line_status" gorm:"column:L_LINESTATUS;type:char(1)"`
-	ShipDate      time.Time `json:"ship_date" gorm:"column:L_SHIPDATE;type:date"`
+	ShipDate      time.Time `json:"ship_date"  gorm:"column:L_SHIPDATE;type:date"`
 	CommitDate    time.Time `json:"commit_date" gorm:"column:L_COMMITDATE;type:date"`
 	ReceiptDate   time.Time `json:"receipt_date" gorm:"column:L_RECEIPTDATE;type:date"`
 	ShipInstruct  string    `json:"ship_instruct" gorm:"column:L_SHIPINSTRUCT;type:char(25)"`
