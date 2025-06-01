@@ -22,5 +22,6 @@ func Run() {
 	PartRouter(nr)
 	RegionRouter(nr)
 	SupplierRouter(nr)
+	TpccRouter(nr)
 	r.Run(addr)
 }
