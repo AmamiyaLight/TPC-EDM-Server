@@ -1,0 +1,1 @@
+go-tpc tpcc -H 127.0.0.1 -P 3306 -D tpc_h -U root -p root -T 4 --time 1m run

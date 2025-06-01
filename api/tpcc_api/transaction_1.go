@@ -163,7 +163,7 @@ func (t TpccApi) NewOrderView(c *gin.Context) {
 	step5 := StepResult{StepName: "insert_new_order"}
 	start = time.Now()
 	err = tx.Exec(`
-		INSERT INTO new_orders (no_o_id, no_d_id, no_w_id)
+		INSERT INTO new_order (no_o_id, no_d_id, no_w_id)
 		VALUES (?, ?, ?)`,
 		oID, req.D_ID, req.W_ID).Error
 	step5.TimeMs = time.Since(start).Seconds() * 1000
