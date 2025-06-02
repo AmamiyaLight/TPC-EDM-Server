@@ -2,12 +2,14 @@ package router
 
 import (
 	"TPC-EDM-Server/global"
+	"TPC-EDM-Server/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func Run() {
 	gin.SetMode(global.Config.System.GinMode)
 	r := gin.Default()
+	r.Use(middleware.Cors())
 
 	r.Static("/uploads", "uploads")
 
