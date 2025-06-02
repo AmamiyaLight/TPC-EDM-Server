@@ -1,6 +1,7 @@
 package flags
 
 import (
+	"TPC-EDM-Server/flags/flag_user"
 	"TPC-EDM-Server/service"
 	"flag"
 	"os"
@@ -36,5 +37,14 @@ func Run() {
 	if FlagOptions.TPCH {
 		service.TpchTest()
 		os.Exit(0)
+	}
+	switch FlagOptions.Type {
+	case "user":
+		u := flag_user.FlagUser{}
+		switch FlagOptions.Sub {
+		case "create":
+			u.Create()
+			os.Exit(0)
+		}
 	}
 }
