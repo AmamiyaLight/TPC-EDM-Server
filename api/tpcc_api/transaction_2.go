@@ -25,10 +25,10 @@ type PaymentRequest struct {
 
 // 步骤执行信息
 type StepInfo struct {
-	StepName  string        `json:"step_name"`  // 步骤名称
-	TimeTaken time.Duration `json:"time_taken"` // 执行耗时
-	Plan      string        `json:"plan"`       // 执行计划
-	UsedIndex string        `json:"used_index"` // 使用的索引
+	StepName    string  `json:"step_name"`    // 步骤名称
+	TimeMs      float64 `json:"time_ms"`      // 执行耗时
+	ExplainPlan string  `json:"explain_plan"` // 执行计划
+	IndexUsed   string  `json:"index_used"`   // 使用的索引
 }
 
 // 事务响应结构
@@ -64,13 +64,13 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		res.FailWithError(err, c)
 		return
 	}
-	step1Time := time.Since(step1Start)
+	step1Time := time.Since(step1Start).Seconds() * 1000
 	step1Plan, step1Index := getExplainInfo(tx, "UPDATE warehouse SET w_ytd = w_ytd + ? WHERE w_id = ?", req.H_AMOUNT, req.W_ID)
 	response.Steps = append(response.Steps, StepInfo{
-		StepName:  "update_warehouse",
-		TimeTaken: step1Time,
-		Plan:      step1Plan,
-		UsedIndex: step1Index,
+		StepName:    "update_warehouse",
+		TimeMs:      step1Time,
+		ExplainPlan: step1Plan,
+		IndexUsed:   step1Index,
 	})
 
 	// 步骤2: 查询仓库信息
@@ -93,10 +93,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 	step2Time := time.Since(step2Start)
 	step2Plan, step2Index := getExplainInfo(tx, "SELECT w_street_1, w_street_2, w_city, w_state, w_zip, w_name FROM warehouse WHERE w_id = ?", req.W_ID)
 	response.Steps = append(response.Steps, StepInfo{
-		StepName:  "select_warehouse",
-		TimeTaken: step2Time,
-		Plan:      step2Plan,
-		UsedIndex: step2Index,
+		StepName:    "select_warehouse",
+		TimeMs:      step2Time.Seconds() * 1000,
+		ExplainPlan: step2Plan,
+		IndexUsed:   step2Index,
 	})
 
 	// 步骤3: 更新地区余额
@@ -110,10 +110,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 	step3Time := time.Since(step3Start)
 	step3Plan, step3Index := getExplainInfo(tx, "UPDATE district SET d_ytd = d_ytd + ? WHERE d_w_id = ? AND d_id = ?", req.H_AMOUNT, req.D_W_ID, req.D_ID)
 	response.Steps = append(response.Steps, StepInfo{
-		StepName:  "update_district",
-		TimeTaken: step3Time,
-		Plan:      step3Plan,
-		UsedIndex: step3Index,
+		StepName:    "update_district",
+		TimeMs:      step3Time.Seconds() * 1000,
+		ExplainPlan: step3Plan,
+		IndexUsed:   step3Index,
 	})
 
 	// 步骤4: 查询地区信息
@@ -136,10 +136,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 	step4Time := time.Since(step4Start)
 	step4Plan, step4Index := getExplainInfo(tx, "SELECT d_street_1, d_street_2, d_city, d_state, d_zip, d_name FROM district WHERE d_w_id = ? AND d_id = ?", req.D_W_ID, req.D_ID)
 	response.Steps = append(response.Steps, StepInfo{
-		StepName:  "select_district",
-		TimeTaken: step4Time,
-		Plan:      step4Plan,
-		UsedIndex: step4Index,
+		StepName:    "select_district",
+		TimeMs:      step4Time.Seconds() * 1000,
+		ExplainPlan: step4Plan,
+		IndexUsed:   step4Index,
 	})
 
 	// 步骤5: 根据客户标识类型处理客户信息
@@ -176,10 +176,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step5_1Time := time.Since(step5_1Start)
 		step5_1Plan, step5_1Index := getExplainInfo(tx, "SELECT COUNT(c_id) FROM customer WHERE c_last = ? AND c_d_id = ? AND c_w_id = ?", req.C_LAST, req.C_D_ID, req.C_W_ID)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "count_customers_by_last_name",
-			TimeTaken: step5_1Time,
-			Plan:      step5_1Plan,
-			UsedIndex: step5_1Index,
+			StepName:    "count_customers_by_last_name",
+			TimeMs:      step5_1Time.Seconds() * 1000,
+			ExplainPlan: step5_1Plan,
+			IndexUsed:   step5_1Index,
 		})
 
 		// 计算中间客户位置
@@ -203,10 +203,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step5_2Time := time.Since(step5_2Start)
 		step5_2Plan, step5_2Index := getExplainInfo(tx, query, req.C_W_ID, req.C_D_ID, req.C_LAST, offset)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "select_customer_by_last_name",
-			TimeTaken: step5_2Time,
-			Plan:      step5_2Plan,
-			UsedIndex: step5_2Index,
+			StepName:    "select_customer_by_last_name",
+			TimeMs:      step5_2Time.Seconds() * 1000,
+			ExplainPlan: step5_2Plan,
+			IndexUsed:   step5_2Index,
 		})
 	} else {
 		// 5.2 按ID查询客户
@@ -223,10 +223,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step5Time := time.Since(step5Start)
 		step5Plan, step5Index := getExplainInfo(tx, query, req.C_W_ID, req.C_D_ID, req.C_ID)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "select_customer_by_id",
-			TimeTaken: step5Time,
-			Plan:      step5Plan,
-			UsedIndex: step5Index,
+			StepName:    "select_customer_by_id",
+			TimeMs:      step5Time.Seconds() * 1000,
+			ExplainPlan: step5Plan,
+			IndexUsed:   step5Index,
 		})
 	}
 
@@ -245,10 +245,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step6_1Time := time.Since(step6_1Start)
 		step6_1Plan, step6_1Index := getExplainInfo(tx, "SELECT c_data FROM customer WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?", req.C_W_ID, req.C_D_ID, customer.CId)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "select_customer_data",
-			TimeTaken: step6_1Time,
-			Plan:      step6_1Plan,
-			UsedIndex: step6_1Index,
+			StepName:    "select_customer_data",
+			TimeMs:      step6_1Time.Seconds() * 1000,
+			ExplainPlan: step6_1Plan,
+			IndexUsed:   step6_1Index,
 		})
 
 		// 生成新客户数据
@@ -269,10 +269,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step6_2Time := time.Since(step6_2Start)
 		step6_2Plan, step6_2Index := getExplainInfo(tx, "UPDATE customer SET c_balance = ?, c_data = ? WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?", customer.CBalance, newData, req.C_W_ID, req.C_D_ID, customer.CId)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "update_customer_with_data",
-			TimeTaken: step6_2Time,
-			Plan:      step6_2Plan,
-			UsedIndex: step6_2Index,
+			StepName:    "update_customer_with_data",
+			TimeMs:      step6_2Time.Seconds() * 1000,
+			ExplainPlan: step6_2Plan,
+			IndexUsed:   step6_2Index,
 		})
 	} else {
 		step6Start := time.Now()
@@ -285,10 +285,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 		step6Time := time.Since(step6Start)
 		step6Plan, step6Index := getExplainInfo(tx, "UPDATE customer SET c_balance = ? WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?", customer.CBalance, req.C_W_ID, req.C_D_ID, customer.CId)
 		response.Steps = append(response.Steps, StepInfo{
-			StepName:  "update_customer",
-			TimeTaken: step6Time,
-			Plan:      step6Plan,
-			UsedIndex: step6Index,
+			StepName:    "update_customer",
+			TimeMs:      step6Time.Seconds() * 1000,
+			ExplainPlan: step6Plan,
+			IndexUsed:   step6Index,
 		})
 	}
 
@@ -309,10 +309,10 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 		req.C_D_ID, req.C_W_ID, customer.CId, req.D_ID, req.W_ID, time.Now(), req.H_AMOUNT, hData)
 	response.Steps = append(response.Steps, StepInfo{
-		StepName:  "insert_history",
-		TimeTaken: step7Time,
-		Plan:      step7Plan,
-		UsedIndex: step7Index,
+		StepName:    "insert_history",
+		TimeMs:      step7Time.Seconds() * 1000,
+		ExplainPlan: step7Plan,
+		IndexUsed:   step7Index,
 	})
 
 	// 提交事务
@@ -325,7 +325,7 @@ func (t *TpccApi) PaymentView(c *gin.Context) {
 
 	response.Success = true
 	response.Message = "Payment transaction completed successfully"
-	res.OkWithData(response, c)
+	c.JSON(200, response)
 }
 
 // 获取SQL执行计划和索引使用情况
@@ -337,11 +337,11 @@ func getExplainInfo(db *gorm.DB, query string, args ...interface{}) (string, str
 	}
 
 	var planBuilder strings.Builder
-	var usedIndex string
+	var IndexUsed string
 
 	for _, row := range explainRows {
 		if idx, ok := row["key"]; ok && idx != nil {
-			usedIndex = idx.(string)
+			IndexUsed = idx.(string)
 		}
 		for k, v := range row {
 			planBuilder.WriteString(fmt.Sprintf("%s: %v | ", k, v))
@@ -349,5 +349,5 @@ func getExplainInfo(db *gorm.DB, query string, args ...interface{}) (string, str
 		planBuilder.WriteString("\n")
 	}
 
-	return planBuilder.String(), usedIndex
+	return planBuilder.String(), IndexUsed
 }

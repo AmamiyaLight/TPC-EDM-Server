@@ -4,6 +4,7 @@ import (
 	"TPC-EDM-Server/common/res"
 	"TPC-EDM-Server/global"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type PartSuppRelationResponse struct {
@@ -13,14 +14,21 @@ type PartSuppRelationResponse struct {
 	Count int64  `json:"count" gorm:"column:supplier_cnt"`
 }
 
+// 新增：包含完整响应数据的结构体
+type PartSuppQueryResponse struct {
+	Results     []PartSuppRelationResponse `json:"results"`      // 查询结果
+	Duration    string                     `json:"duration"`     // 查询执行时间
+	ExplainPlan string                     `json:"explain_plan"` // 执行计划详情
+}
+
 func (PartSuppApi) PartSuppRelationView(c *gin.Context) {
 	// 构建查询SQL
 	query := `
 	SELECT
-    p.P_BRAND,
-    p.P_TYPE,
-    p.P_SIZE,
-    COUNT(DISTINCT ps.PS_SUPPKEY) AS supplier_cnt
+		p.P_BRAND,
+		p.P_TYPE,
+		p.P_SIZE,
+		COUNT(DISTINCT ps.PS_SUPPKEY) AS supplier_cnt
 	FROM part_models p
 	JOIN part_supp_models ps ON p.P_PARTKEY = ps.PS_PARTKEY
 	LEFT JOIN supplier_models s 
@@ -35,14 +43,34 @@ func (PartSuppApi) PartSuppRelationView(c *gin.Context) {
 	ORDER BY supplier_cnt DESC, p.P_BRAND, p.P_TYPE, p.P_SIZE;
 	`
 
-	// 执行查询（返回多条记录）
+	// 1. 执行原始查询并计时
+	startTime := time.Now()
 	var results []PartSuppRelationResponse
 	err := global.DB.Raw(query).Scan(&results).Error
+	duration := time.Since(startTime).String() // 获取耗时
 
 	if err != nil {
 		res.FailWithError(err, c)
 		return
 	}
 
-	res.OkWithData(results, c)
+	// 2. 获取执行计划
+	explainQuery := "EXPLAIN FORMAT=JSON " + query
+	var explainResult struct {
+		Explain string `gorm:"column:EXPLAIN"`
+	}
+	err = global.DB.Raw(explainQuery).Scan(&explainResult).Error
+	if err != nil {
+		res.FailWithError(err, c)
+		return
+	}
+
+	// 3. 构建完整响应
+	response := PartSuppQueryResponse{
+		Results:     results,
+		Duration:    duration,
+		ExplainPlan: explainResult.Explain,
+	}
+
+	res.OkWithData(response, c)
 }

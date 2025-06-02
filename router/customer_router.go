@@ -10,5 +10,4 @@ func CustomerRouter(r *gin.RouterGroup) {
 	r.POST("customer", app.CustomerInsertView)
 	r.GET("customer", app.CustomerListView)
 	r.GET("customer/download", app.CustomerDownloadView)
-	r.GET("customer/search", app.CustomerSearchView)
 }

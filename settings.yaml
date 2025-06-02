@@ -11,3 +11,7 @@ db:
     db: tpc_h
     debug: false
     source: mysql
+jwt:
+  expire: 3000
+  secret: TOKYO-ANON
+  issuer: amamiya
