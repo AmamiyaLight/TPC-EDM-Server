@@ -28,9 +28,9 @@ func InitDB() *gorm.DB {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetMaxIdleConns(global.Config.DB[0].MaxIdle)
+	sqlDB.SetMaxOpenConns(global.Config.DB[0].MaxConn)
+	sqlDB.SetConnMaxLifetime(time.Hour * time.Duration(global.Config.DB[0].MaxLifeTime))
 	logrus.Infoln("数据库连接成功")
 	if len(global.Config.DB) > 1 {
 		var readList []gorm.Dialector

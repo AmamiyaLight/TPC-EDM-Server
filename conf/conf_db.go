@@ -3,13 +3,16 @@ package conf
 import "fmt"
 
 type DB struct {
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	DB       string `yaml:"db"`
-	Debug    bool   `yaml:"debug"`  //输出全部日志
-	Source   string `yaml:"source"` //mysql或pgsql
+	User        string `yaml:"user"`
+	Password    string `yaml:"password"`
+	Host        string `yaml:"host"`
+	Port        int    `yaml:"port"`
+	DB          string `yaml:"db"`
+	Debug       bool   `yaml:"debug"`  //输出全部日志
+	Source      string `yaml:"source"` //mysql或pgsql
+	MaxConn     int    `yaml:"max_conn"`
+	MaxIdle     int    `yaml:"max_idle"`
+	MaxLifeTime int    `yaml:"max_lifetime"`
 }
 
 func (db *DB) DSN() string {

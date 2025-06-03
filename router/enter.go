@@ -10,9 +10,7 @@ func Run() {
 	gin.SetMode(global.Config.System.GinMode)
 	r := gin.Default()
 	r.Use(middleware.Cors())
-
-	r.Static("/uploads", "uploads")
-
+	r.Use(middleware.AuthMiddleware)
 	nr := r.Group("/api")
 	addr := global.Config.System.Addr()
 	UserRouter(nr)
@@ -25,5 +23,6 @@ func Run() {
 	RegionRouter(nr)
 	SupplierRouter(nr)
 	TpccRouter(nr)
+	SysRouter(nr)
 	r.Run(addr)
 }

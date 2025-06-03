@@ -9,6 +9,7 @@ import (
 	"TPC-EDM-Server/api/part_supp_api"
 	"TPC-EDM-Server/api/region_api"
 	"TPC-EDM-Server/api/supplier_api"
+	"TPC-EDM-Server/api/system_api"
 	"TPC-EDM-Server/api/tpcc_api"
 	"TPC-EDM-Server/api/user_api"
 )
@@ -24,6 +25,7 @@ type Api struct {
 	SupplierApi supplier_api.SupplierApi
 	RegionApi   region_api.RegionApi
 	TpccApi     tpcc_api.TpccApi
+	SystemApi   system_api.SystemApi
 }
 
 var App = Api{}

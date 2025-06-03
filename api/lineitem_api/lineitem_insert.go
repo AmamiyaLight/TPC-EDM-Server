@@ -28,7 +28,7 @@ func parseLineItemLine(line string) (models.LineItemModel, error) {
 	if len(fields) < 16 {
 		return models.LineItemModel{}, errors.New("字段不足")
 	}
-	return models.LineItemModel{
+	item := models.LineItemModel{
 		OrderKey:      parse_utils.ParseUint(fields[0]),
 		PartKey:       parse_utils.ParseUint(fields[1]),
 		SuppKey:       parse_utils.ParseUint(fields[2]),
@@ -45,5 +45,18 @@ func parseLineItemLine(line string) (models.LineItemModel, error) {
 		ShipInstruct:  fields[13],
 		ShipMode:      fields[14],
 		Comment:       fields[15],
-	}, nil
+	}
+	if item.OrderKey == 0 || item.PartKey == 0 {
+		return models.LineItemModel{}, errors.New("主键或外键校验失败")
+	}
+	if item.LineNumber <= 0 {
+		return models.LineItemModel{}, errors.New("行号不能为负")
+	}
+	if item.Quantity < 0 || item.Quantity > 100 {
+		return models.LineItemModel{}, errors.New("quantity字段超限")
+	}
+	if item.Discount < 0 || item.Tax < 0 || item.ExtendedPrice < 0 {
+		return models.LineItemModel{}, errors.New("价格校验失败")
+	}
+	return item, nil
 }

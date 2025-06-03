@@ -11,6 +11,9 @@ db:
     db: tpc_h
     debug: false
     source: mysql
+    max_conn: 100
+    max_idle: 10
+    max_lifetime: 3
 jwt:
   expire: 3000
   secret: TOKYO-ANON

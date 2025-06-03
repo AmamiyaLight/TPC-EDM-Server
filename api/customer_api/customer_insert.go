@@ -28,7 +28,7 @@ func parseCustomerLine(line string) (models.CustomerModel, error) {
 	if len(fields) < 5 {
 		return models.CustomerModel{}, errors.New("字段不足")
 	}
-	return models.CustomerModel{
+	item := models.CustomerModel{
 		CustKey:    parse_utils.ParseUint(fields[0]),
 		Name:       fields[1],
 		Address:    fields[2],
@@ -37,5 +37,13 @@ func parseCustomerLine(line string) (models.CustomerModel, error) {
 		AcctBal:    parse_utils.ParseFloat64(fields[5]),
 		MktSegment: fields[6],
 		Comment:    fields[7],
-	}, nil
+	}
+	if item.CustKey == 0 || item.NationKey == 0 {
+		return models.CustomerModel{}, errors.New("主键或外键校验失败")
+	}
+	if item.AcctBal < 0 {
+		return models.CustomerModel{}, errors.New("账户余额不能为负")
+	}
+
+	return item, nil
 }

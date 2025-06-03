@@ -30,8 +30,7 @@ func parseOrderLine(line string) (models.OrdersModel, error) {
 	if len(fields) < 9 {
 		return models.OrdersModel{}, errors.New("字段不足")
 	}
-
-	return models.OrdersModel{
+	item := models.OrdersModel{
 		OrderKey:      parse_utils.ParseUint(fields[0]),
 		CustKey:       parse_utils.ParseUint(fields[1]),
 		OrderStatus:   fields[2],
@@ -41,5 +40,12 @@ func parseOrderLine(line string) (models.OrdersModel, error) {
 		Clerk:         fields[6],
 		ShipPriority:  parse_utils.ParseIntUtil(fields[7]),
 		Comment:       fields[8],
-	}, nil
+	}
+	if item.OrderKey == 0 || item.CustKey == 0 {
+		return models.OrdersModel{}, errors.New("主键或外键校验失败")
+	}
+	if item.TotalPrice < 0 {
+		return models.OrdersModel{}, errors.New("总价不能为负")
+	}
+	return item, nil
 }
