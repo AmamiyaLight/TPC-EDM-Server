@@ -4,7 +4,6 @@ import (
 	"TPC-EDM-Server/common/res"
 	"TPC-EDM-Server/global"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -18,9 +17,7 @@ func (PartApi) PartPromoView(c *gin.Context) {
 		res.FailWithError(err, c)
 		return
 	}
-	logrus.Info(cr.Date)
 	startDate, _ := time.Parse("2006-01-02", cr.Date)
-	logrus.Info(startDate)
 	endDate := startDate.AddDate(0, 2, 0)
 
 	query := `
@@ -45,6 +42,5 @@ func (PartApi) PartPromoView(c *gin.Context) {
 		res.FailWithError(err, c)
 		return
 	}
-	logrus.Info(promoPercent)
 	res.OkWithData(promoPercent, c)
 }

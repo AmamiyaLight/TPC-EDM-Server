@@ -10,21 +10,21 @@ import (
 )
 
 func TpchTest() {
-	// 1. 读取SQL文件
+	// 读取SQL文件
 	sqlContent, err := os.ReadFile("./service/tpch-stream.sql")
 	if err != nil {
 		logrus.Errorf("读取SQL文件失败: %v", err)
 		return
 	}
 
-	// 2. 分割SQL语句
+	// 割SQL语句
 	queries := parseSQLQueries(string(sqlContent))
 	if len(queries) == 0 {
 		logrus.Warning("未找到有效的SQL语句")
 		return
 	}
 
-	// 3. 准备性能统计
+	// 准备性能统计
 	var (
 		wg            sync.WaitGroup
 		mu            sync.Mutex
@@ -33,9 +33,9 @@ func TpchTest() {
 		workerResults = make([]workerStats, 4)
 	)
 
-	// 4. 启动4个worker
+	// Worker
 	startTime := time.Now()
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 1; i++ {
 		wg.Add(1)
 		go func(workerID int) {
 			defer wg.Done()
@@ -50,7 +50,7 @@ func TpchTest() {
 	wg.Wait()
 	totalDuration := time.Since(startTime)
 
-	// 5. 计算性能指标
+	// 计算性能指标
 	throughput := float64(totalQueries) / totalDuration.Seconds()
 	avgLatency := totalLatency.Seconds() / float64(totalQueries) * 1000 // 毫秒
 
@@ -95,6 +95,7 @@ func executeQueries(workerID int, queries []string) workerStats {
 	var stats workerStats
 	for _, query := range queries {
 		start := time.Now()
+		logrus.Infof("Worker %d 开始执行查询[%d]", workerID, stats.queryCount+1)
 		result := global.DB.Exec(query)
 		latency := time.Since(start)
 
@@ -102,10 +103,10 @@ func executeQueries(workerID int, queries []string) workerStats {
 		stats.totalLatency += latency
 
 		if result.Error != nil {
-			logrus.Warnf("[Worker %d] 查询执行失败: %v\nSQL: %s", workerID, result.Error, query)
+			logrus.Warnf("[Worker %d] 查询执行失败: %v\n", workerID, result.Error)
 		} else {
-			logrus.Debugf("[Worker %d] 执行成功 (%.2fms): %s",
-				workerID, latency.Seconds()*1000, query)
+			logrus.Debugf("[Worker %d] 执行查询[%d]成功 (%.2fms)",
+				workerID, stats.queryCount, latency.Seconds()*1000)
 		}
 	}
 	return stats

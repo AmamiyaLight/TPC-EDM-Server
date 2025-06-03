@@ -8,6 +8,8 @@ import (
 
 func UserRouter(r *gin.RouterGroup) {
 	app := api.App.UserApi
+	r.GET("user", app.UserListView)
+	r.GET("user/detail", middleware.AuthMiddleware, app.UserDetailView)
 	r.POST("user", app.PwdLoginView)
-	r.DELETE("user", middleware.AdminMiddleware, app.UserDeleteView)
+	r.DELETE("user", middleware.AdminMiddleware, app.UserRemoveView)
 }

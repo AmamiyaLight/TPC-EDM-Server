@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (UserApi) UserDeleteView(c *gin.Context) {
+func (UserApi) UserRemoveView(c *gin.Context) {
 	var cr models.IDRequest
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {

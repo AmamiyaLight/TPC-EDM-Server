@@ -8,6 +8,6 @@ import (
 
 func SysRouter(r *gin.RouterGroup) {
 	app := api.App.SystemApi
-	r.PUT("system", middleware.AdminMiddleware, app.SystemUpdateView)
+	r.PUT("system/:name", middleware.AdminMiddleware, app.SystemUpdateView)
 	r.GET("system", middleware.AdminMiddleware, app.SystemInfoView)
 }

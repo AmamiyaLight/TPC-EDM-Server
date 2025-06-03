@@ -278,39 +278,39 @@ order by
 -- Approved February 1998
 
 
-select
-	nation_models,
-	o_year,
-	sum(amount) as sum_profit
-from
-	(
-		select
-			n_name as nation_models,
-			extract(year from o_orderdate) as o_year,
-			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
-		from
-			part_models,
-			supplier_models,
-			line_item_models,
-			part_supp_models,
-			orders_models,
-			nation_models
-		where
-			s_suppkey = l_suppkey
-			and ps_suppkey = l_suppkey
-			and ps_partkey = l_partkey
-			and p_partkey = l_partkey
-			and o_orderkey = l_orderkey
-			and s_nationkey = n_nationkey
-			and p_name like '%green%'
-	) as profit
-group by
-	nation_models,
-	o_year
-order by
-	nation_models,
-	o_year desc
-;
+# select
+# 	nation_models,
+# 	o_year,
+# 	sum(amount) as sum_profit
+# from
+# 	(
+# 		select
+# 			n_name as nation_models,
+# 			extract(year from o_orderdate) as o_year,
+# 			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+# 		from
+# 			part_models,
+# 			supplier_models,
+# 			line_item_models,
+# 			part_supp_models,
+# 			orders_models,
+# 			nation_models
+# 		where
+# 			s_suppkey = l_suppkey
+# 			and ps_suppkey = l_suppkey
+# 			and ps_partkey = l_partkey
+# 			and p_partkey = l_partkey
+# 			and o_orderkey = l_orderkey
+# 			and s_nationkey = n_nationkey
+# 			and p_name like '%green%'
+# 	) as profit
+# group by
+# 	nation_models,
+# 	o_year
+# order by
+# 	nation_models,
+# 	o_year desc
+# ;
 -- $ID$
 -- TPC-H/TPC-R Returned Item Reporting Query (Q10)
 -- Functional Query Definition
@@ -424,27 +424,27 @@ order by
 -- Approved February 1998
 
 
-select
-	c_count,
-	count(*) as custdist
-from
-	(
-		select
-			c_custkey,
-			count(o_orderkey)
-		from
-			customer_models left outer join orders_models on
-				c_custkey = o_custkey
-				and o_comment not like '%special%requests%'
-		group by
-			c_custkey
-	) as c_orders (c_custkey, c_count)
-group by
-	c_count
-order by
-	custdist desc,
-	c_count desc
-;
+# select
+# 	c_count,
+# 	count(*) as custdist
+# from
+# 	(
+# 		select
+# 			c_custkey,
+# 			count(o_orderkey)
+# 		from
+# 			customer_models left outer join orders_models on
+# 				c_custkey = o_custkey
+# 				and o_comment not like '%special%requests%'
+# 		group by
+# 			c_custkey
+# 	) as c_orders (c_custkey, c_count)
+# group by
+# 	c_count
+# order by
+# 	custdist desc,
+# 	c_count desc
+# ;
 -- $ID$
 -- TPC-H/TPC-R Promotion Effect Query (Q14)
 -- Functional Query Definition

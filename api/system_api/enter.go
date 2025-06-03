@@ -12,15 +12,15 @@ type SystemApi struct {
 }
 
 type SystemInfoResponse struct {
-	User        string
-	Password    string
-	Host        string
-	Port        int
-	DB          string
-	Source      string
-	MaxConn     int
-	MaxIdle     int
-	MaxLifeTime int
+	User        string `json:"user"`
+	Password    string `json:"password"`
+	Host        string `json:"host"`
+	Port        int    `json:"port"`
+	DB          string `json:"DB"`
+	Source      string `json:"source"`
+	MaxConn     int    `json:"maxConn"`
+	MaxIdle     int    `json:"maxIdle"`
+	MaxLifeTime int    `json:"maxLifeTime"`
 }
 
 func (SystemApi) SystemInfoView(c *gin.Context) {
